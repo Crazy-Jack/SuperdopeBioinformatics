@@ -30,49 +30,15 @@ parser.add_argument("-r", type=str, help="Right adapter of the file")
 # Get all the arguments
 args = parser.parse_args()
 combine_args_skewer = ""
-
+combine_args_skewer += "../skewer/skewer" + " "
 # Combine all arguments to a command line
-if args.l == None and args.r == None:
-    combine_args_skewer = (
-        "../skewer/skewer" + " " + args.inputFiles1 + " " + args.inputFiles2
-    )
-elif args.l != None and args.r == None:
-    combine_args_skewer = (
-        "../skewer/skewer"
-        + " "
-        + "-x "
-        + args.l
-        + " "
-        + args.inputFiles1
-        + " "
-        + args.inputFiles2
-    )
-elif args.l == None and args.r != None:
-    combine_args_skewer = (
-        "../skewer/skewer"
-        + " "
-        + "-y "
-        + args.r
-        + " "
-        + args.inputFiles1
-        + " "
-        + args.inputFiles2
-    )
-else:
-    combine_args_skewer = (
-        "../skewer/skewer"
-        + " "
-        + "-x "
-        + args.l
-        + " "
-        + "-y "
-        + args.r
-        + " "
-        + args.inputFiles1
-        + " "
-        + args.inputFiles2
-    )
+if args.l is not None:
+    combine_args_skewer += "-x " + args.l + " "
 
+if args.r is not None:
+    combine_args_skewer += "-y " + args.r + " "
+
+combine_args_skewer += args.inputFiles1 + " " + args.inputFiles2
 
 # Call the command line, this causes a gzip: broken pipe bug
 # subprocess.call(combine_args_skewer, shell=True)
@@ -97,8 +63,8 @@ combine_args_inputlist1 = (
 
 combine_args_inputlist2 = ""
 combine_args_inputlist2 = (
-    'echo "' + args.inputFiles1[:-3] +
-    '-trimmed-pair2.fastq" >> input_list.txt'
+    'echo "' + args.inputFiles1[:-3]
+    + '-trimmed-pair2.fastq" >> input_list.txt'
 )
 
 # Call the command line
