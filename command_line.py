@@ -9,7 +9,7 @@ Sample data test from ENCODE project has passed
 # Create a parser
 parser = argparse.ArgumentParser(
     description="Command line for skewer and fastuniq.")
-
+    
 # Create argument for the first input file
 parser.add_argument("inputFiles1", type=str, help="The first input files")
 
