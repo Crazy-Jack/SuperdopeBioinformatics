@@ -1,0 +1,9 @@
+README.md
+setup.py
+Team3/__init__.py
+Team3/__main__.py
+Team3.egg-info/PKG-INFO
+Team3.egg-info/SOURCES.txt
+Team3.egg-info/dependency_links.txt
+Team3.egg-info/entry_points.txt
+Team3.egg-info/top_level.txt
