@@ -1,3 +1,0 @@
-[console_scripts]
-Team3 = Team3.__main__:main
-
