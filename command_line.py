@@ -72,6 +72,9 @@ subprocess.call(combine_args_inputlist1, shell=True)
 subprocess.call(combine_args_inputlist2, shell=True)
 
 # ------------This part is for Fastuniq--------------------------------------
+"""
+Sample data produced by skewer has passed
+"""
 combine_args_fastuniq = ""
 combine_args_fastuniq = (
     "../FastUniq/source/fastuniq -i input_list.txt -t q -o "
