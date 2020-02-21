@@ -1,5 +1,5 @@
 # SuperdopeBioinformatics
-03713 group project for Spring 2020
+Predicting Biochemical Pathways Involving Target RBP
 
 
 ## Install
