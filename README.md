@@ -1,5 +1,5 @@
-# SuperdopeBioinformatics
-Predicting Biochemical Pathways Involving Target RBP
+# Predicting Biochemical Pathways Involving Target RBP
+
 
 
 ## Install
