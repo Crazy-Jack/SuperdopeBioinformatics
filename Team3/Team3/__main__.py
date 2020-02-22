@@ -2,13 +2,13 @@ import subprocess
 import argparse
 import signal
 
-# -------------------------This part is for catadapt-------------------------
+# -------------------------This part is for cutadapt-------------------------
 """
 Sample data test from ENCODE project has passed
 """
 # Create a parser
 parser = argparse.ArgumentParser(
-    description="Command line for catadapt and fastuniq.")
+    description="Command line for cutadapt and fastuniq.")
 
 # Create argument for the first input file
 parser.add_argument("inputFiles1", type=str, help="The first input files")
