@@ -1,8 +1,13 @@
 import subprocess
 import argparse
 import signal
-import cutadapt_fastuniq as cf
+#import cutadapt_fastuniq as cf
+from cutadapt_fastuniq import CutAddapt
 from pureclip import PureClip
+from star import STAR
+from samtools import SAM
+from go_analysis import GO
+from pars import PARS
 
 
 
@@ -14,6 +19,7 @@ Sample data test from ENCODE project has passed
 ######################################
 
 # -------------------------This part is for GLOBAL parameter -------------------------
+# SECTION-1: create argparse structures for final software input and output.
 
 # Create a parser
 parser = argparse.ArgumentParser(
@@ -39,9 +45,11 @@ parser.add_argument("outputFiles2", type=str,
 parse.add_argument(
     "-inter", "--intermediate_file", type=str, help="intermediate file storage, defalt is same dirctory of output file.")
 
-# -------------------------This part is for LOCAL parameters of each software -------------------------
 
-## SECTION: Cutadapt -----------------------------------------------------------------------------------
+## SECTION-2: create argparse structure for each subsoftware we use.
+
+### SECTION-2.1 Cutadapt
+
 # Create argument for 3' adapter and 5' adapter
 parser.add_argument(
     "-a", type=str, help="Trim 3' reads adapter", action='append')
@@ -58,74 +66,104 @@ parser.add_argument(
 parser.add_argument(
     "-e", type=str, help="Error rate"
 )
+### SECTION-2.2 STAR
+#### TODO: build parser structure for STAR, specify which what kind of parameters is needed for STAR related input.
 
 
-## SECTION: STAR
+## SECTION-2.3: SAMtools
+#### TODO: build parser structure for SAMtools, specify which what kind of parameters is needed for SAMtools related input.
 
-## SECTION: PureClip
+
+## SECTION-2.4: PureClip
+#### TODO: build parser structure for PureClip, specify which what kind of parameters is needed for PureClip related input.
 parser.add_argument("-pcn", '--pureclip-parallel-num', help="pureclip parallelism number")
 parser.add_argument("-pcchr", '--pureclip-chr', help="if specificed, then pureclip can have more narrow focus.")
 
-## SECTION: PARS
+## SECTION-2.5: PARS
+#### TODO: build parser structure for PARS, specify which what kind of parameters is needed for PARS related input.
 
 
 
-## SECTION: GO
+## SECTION-2.6: GO
+#### TODO: build parser structure for GO, specify which what kind of parameters is needed for GO related input.
 
 
-
-
-# Get all the arguments
+## Get all the arguments
 args = parser.parse_args()
 
-
+## SECTION-2.7: Shared parameters
+#### TODO: If you need any shared parameters, please include them here. And for minimal redundancy, use the shared param if possible.
 share_param = {
         'genome_ref': args.reference_genome,
     }
+
 ######################################
 ## End OF configuration of Paramters##
 ######################################
 
 
-# -------------------------This part is for cutadapt-------------------------
+## SECTION 3: CALL FUNCTIONs
+
+## SECTION 3.1: CutAdapt
+#### TODO: Define your local parameter dict you want to pass into the class.
+
+
+cutadapt_param = {
+        'input_file1': 0, # TO BE MODIFYED
+        'input_file2': 0, # TO BE MODIFYED
+        'output_file1': 0, #
+        } # MODIFY this
+
+#cf.CallCutadapt(args)
+#cf.CallInputlist(args)
+#cf.CallFastuniq(args)
+cf = CutAdapt(cutadapt_param)
+cf.CallCutAdapt()
+
+
+## SECTION-3.2: Calling STAR
+#### TODO: Define your local parameter dict you want to pass into the class.
+star_param = {
+        'output_bam': 'star_output.bam',
+        } # MODIFY this
+
+st = STAR(star_param)
+st.CallSTAR()
+
+
+# SECTION-3.3: Calling Samtools
+#### TODO: Define your local parameter dict you want to pass into the class.
+samtool_param = {
+        'output_bai': start_param + '.bai'
+        } # MODIFY this
+
+sm = SAM(samtool_param)
+sm.CallSAM()
+
+# SECTION-3.4: Calling pureclip
+#### TODO: Define your local parameter dict you want to pass into the class.
 # call the functions for commandline
-cf.CallCutadapt(args)
-cf.CallInputlist(args)
-cf.CallFastuniq(args)
-
-# -------------------------This part is for STAR -------------------------
-# Section: Calling STAR
-# Input_file_name1: reads_
-
-
-# -------------------------This part is for Samtools-------------------------
-# Section: Calling Samtools
-
-
-
-# -------------------------This part is for PureClip-------------------------
-# Section: Calling pureclip
-# input_file_name1: pureclip_reads.bam
-# input_file_name2: pureclip_reads.bam.bai
-# input_file_name3: genome.fa
-# output_file_name1: pureclip_output.bed
-# parallel number: pureclip_parallel_num
 pureclip_param = {
         'reads': star_param['output_bam'],
         'align': samtool_param['output_bai'],
         'genome': share_param['genome_ref'],
         'output_bed': 'pureclip_output.bed',
         'parallel_num': args.pureclip_parallel_num,
-        'specific_chromsome': args.pureclip_chr,
-        }
+        'specific_chromosome': args.pureclip_chr,
+        } # MODIFY this
+
 pc = PureClip(pureclip_param)
-pc.CallPureClip(args)
+pc.CallPureClip()
 
 
+# SECTION-3.5: Calling PARS
+#### TODO: Define your local parameter dict you want to pass into the class.
 
-# -------------------------This part is for PARS-------------------------
-# Section: Calling PARS
+pars_param = {}
 
 
-# -------------------------This part is for GO-------------------------
-# Section: Calling GO
+# SECTION-3.6: Calling GO
+#### TODO: Define your local parameter dict you want to pass into the class.
+go_param = {} # MODIFY this
+go = GO(go_param)
+go.CallGO()

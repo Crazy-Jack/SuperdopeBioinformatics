@@ -1,71 +1,31 @@
 import subprocess
 import signal
 
-def CallCutadapt(args):
-    combine_args_catadapt = ""
-    combine_args_catadapt += "cutadapt" + " "
-
-    # Combine all arguments to a command line
-    if args.e is not None:
-        combine_args_catadapt += "-e " + args.e + " "
-    if args.a is not None:
-        for i in args.a:
-            combine_args_catadapt += "-a " + i + " "
-
-    if args.A is not None:
-        for i in args.A:
-            combine_args_catadapt += "-A " + i + " "
-    if args.g is not None:
-        for i in args.g:
-            combine_args_catadapt += "-g " + i + " "
-
-    if args.G is not None:
-        for i in args.G:
-            combine_args_catadapt += "-G " + i + " "
+class PureClip:
+    def __init__(self, parameter):
+        self.reads_filename = parameter['reads']
+        self.algin_filename = parameter['align']
+        self.genome_filename = parameter['genome']
+        self.parallel_num = parameter['parallel_num']
+        self.specific_chromosome = parameter['specific_chromosome']
+        self.output_filename = parameter['output_bed']
 
 
-    combine_args_catadapt += args.inputFiles1 + " " + args.inputFiles2 + " "
-    combine_args_catadapt += "-o " + args.inputFiles1 + \
-        "-trimmed1.fastq " + "-p " + args.inputFiles2 + "-trimmed2.fastq "
+    def CallPureClip(self):
+        try:
+            command = "pureclip " + "-i " + self.read_filename + " -bai " + self.algin_filename + " -g " self.genome_filename + " -nt " self.parallel_num + " -o " + self.output_filename
+            if specific_chromosome:
+                command += " -iv " + self.specific_chromosome
 
-    # Call the command line, this causes a gzip: broken pipe bug
-    # subprocess.call(combine_args_catadapt, shell=True)
+            # call the service
+            print(command)
+            p = subprocess.Popen(
+                command,
+                preexec_fn=lambda: signal.signal(signal.SIGPIPE, signal.SIG_DFL),
+                shell=True,
+            ).wait()
 
-    # fix it from someone's blog but still do not konw how it works
-    p = subprocess.Popen(
-        combine_args_catadapt,
-        preexec_fn=lambda: signal.signal(signal.SIGPIPE, signal.SIG_DFL),
-        shell=True,
-    ).wait()
+        except Exception as e:
+            print("PureClip Error: ", e)
 
-def CallInputlist(args):
-    combine_args_inputlist1 = ""
-    combine_args_inputlist1 = (
-        'echo "' + args.inputFiles1 + '-trimmed1.fastq" > input_list.txt'
-    )
 
-    combine_args_inputlist2 = ""
-    combine_args_inputlist2 = (
-        'echo "' + args.inputFiles2
-        + '-trimmed2.fastq" >> input_list.txt'
-    )
-
-    # Call the command line
-    subprocess.call(combine_args_inputlist1, shell=True)
-    subprocess.call(combine_args_inputlist2, shell=True)
-
-def CallFastuniq(args):
-    combine_args_fastuniq = ""
-    combine_args_fastuniq = (
-        "../FastUniq/source/fastuniq -i input_list.txt -t q -o "
-        + args.outputFiles1
-        + " -p "
-        + args.outputFiles2
-        + " -c 1"
-    )
-
-    p = subprocess.Popen(
-        combine_args_fastuniq,
-        preexec_fn=lambda: signal.signal(signal.SIGPIPE, signal.SIG_DFL),
-        shell=True,
-    ).wait()
