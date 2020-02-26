@@ -1,4 +1,4 @@
- # Instructions on how to work together for each part
+ # Instructions on how to work together integrating all softwares
 
 Two files you have to modify:
 - `__main__.py`
@@ -18,7 +18,9 @@ Inside each `module.py`:
 - Note that you only have to concate your command into `command` variable. 
 
 
-By doing the above, we are done XD!
+Another thing to note is that since we may want to jointly modify the same `__main__.py` file, we need work on different branches first and then you can do pull request to merge to the master. If you wish to use output file from upstream, be sure to write a comment about what is this file so at the end I can unify the variables. 
+
+By doing the above, we are done XD! It would be interesting to see if this mode is efficient or not. Pin me for questions. 
 
 
 
