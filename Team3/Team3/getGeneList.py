@@ -5,7 +5,6 @@ Top 5% of the ranked genes are used for GO analysis
 """
 
 def getGeneList(filename, save_dir, percent=0.05):
-    print(filename)
     try:
         with open(filename) as pras:
             gene_list = [line.split()[0] for line in pras]

@@ -11,7 +11,7 @@ with open(ver_path) as ver_file:
     exec(ver_file.read(), main_ns)
 
 setuptools.setup(
-    name="Team3",
+    name="BioPro",
     version=main_ns['__version__'],
     author="",
     author_email="",
@@ -32,8 +32,5 @@ setuptools.setup(
         "Operating System :: OS Independent",
     ],
     install_requires=[
-        # for pars
-        'future',
-        'pandas',
     ],
 )

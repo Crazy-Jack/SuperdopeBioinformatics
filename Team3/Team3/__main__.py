@@ -2,12 +2,12 @@ import subprocess
 import argparse
 import os
 import signal
-from cutadapt import CutAdapt
-from pureclip import PureClip
-from star import STAR
-from samtools import SAM
-from go_analysis import GO
-from pras import PRAS
+from .cutadapt import CutAdapt
+from .pureclip import PureClip
+from .star import STAR
+from .samtools import SAM
+from .go_analysis import GO
+from .pras import PRAS
 
 
 """
