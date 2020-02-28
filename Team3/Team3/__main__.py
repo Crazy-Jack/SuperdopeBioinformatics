@@ -79,9 +79,10 @@ parser.add_argument("-pcn", '--pureclip-parallel-num',
 parser.add_argument("-pcchr", '--pureclip-chr',
                     help="if specificed, then pureclip can have more narrow focus.")
 
-# SECTION-2.5: PARS
+# SECTION-2.5: PRAS
 # TODO: build parser structure for PARS, specify which what kind of parameters is needed for PARS related input.
-
+parser.add_argument("-t",'--id_file',type=str, help="Input the ID file. This file has to have two columns, the first column is the transcript ID, and the second column is the gene id or gene name. Please check the instruction page for file example.", action='append')
+parser.add_argument("-s",'--pras_region', type=str, help="Input the Genomic region. Comma separated multiple genomic regions are acceptable. For single genomic region, there are five options: '5UTR' is the 5'UTR, 'CDS' is the coding region, '3UTR' is the 3'UTR, 'transcript' is the entire transcript, and 'splice' is for splicing site (SS). If no input provided, PRAS will take the transcript as the default input. As for multiple genomic regions, any combination of '5UTR', 'CDS', and '3UTR' is accepted. 'splice' cannot appear in the multiple genomice region input.")
 
 # SECTION-2.6: GO
 # TODO: build parser structure for GO, specify which what kind of parameters is needed for GO related input.
@@ -158,10 +159,15 @@ pc = PureClip(pureclip_param)
 pc.CallPureClip()
 
 
-# SECTION-3.5: Calling PARS
+# SECTION-3.5: Calling PRAS
 # TODO: Define your local parameter dict you want to pass into the class.
 
-pars_param = {}
+pras_param = {
+	'annot_file':star_param['annot_file'],
+	'id_file':args.id_file,
+	'region':args.pras_region,
+	'input_file':pureclip_param['output_bed']
+}
 
 
 # SECTION-3.6: Calling GO

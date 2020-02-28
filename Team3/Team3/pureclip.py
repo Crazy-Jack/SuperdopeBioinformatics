@@ -13,7 +13,7 @@ class PureClip:
 
     def CallPureClip(self):
         try:
-            command = "pureclip " + "-i " + self.read_filename + " -bai " + self.algin_filename + " -g " self.genome_filename + " -nt " self.parallel_num + " -o " + self.output_filename
+            command = "pureclip " + "-i " + self.reads_filename + " -bai " + self.algin_filename + " -g " self.genome_filename + " -nt " self.parallel_num + " -o " + self.output_filename
             if specific_chromosome:
                 command += " -iv " + self.specific_chromosome
 
