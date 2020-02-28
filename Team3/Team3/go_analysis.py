@@ -1,6 +1,11 @@
 import subprocess
 import signal
 
+
+
+getGeneList(filename)
+
+
 class GO:
     def __init__(self, parameters):
         # TODO: fill in as self.xxx = parameters['xxx']

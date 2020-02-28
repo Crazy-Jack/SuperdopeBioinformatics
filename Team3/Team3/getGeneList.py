@@ -15,5 +15,5 @@ gene_list = gene_list[1:(len(gene_list)*0.05)+1]
 
 with open("GeneList.txt","w") as f:
     for gene in gene_list:
-        f.write('%s\n' % gene) 
+        f.write('%s\n' % gene)
 

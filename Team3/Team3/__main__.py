@@ -38,7 +38,7 @@ parser.add_argument("reference_genome", type=str,
 parser.add_argument("outputFiles1", type=str, help="Name of first output file")
 
 # Creat argument for second output file
-parser.add_argument("outputFiles2", type=str,
+parser.add_argument("--GOfile", type=str,
                     help="Name of second output file")
 
 # Intermediate Data stroge
@@ -166,6 +166,9 @@ pars_param = {}
 
 # SECTION-3.6: Calling GO
 # TODO: Define your local parameter dict you want to pass into the class.
-go_param = {}  # MODIFY this
+go_param = {
+        'upstream_file': pars_param['outpu_file'],
+        'go_output':
+        }  # MODIFY this
 go = GO(go_param)
 go.CallGO()
