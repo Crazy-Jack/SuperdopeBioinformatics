@@ -1,13 +1,12 @@
 import subprocess
 import argparse
 import signal
-#import cutadapt_fastuniq as cf
 from cutadapt import CutAdapt
-# from pureclip import PureClip
+from pureclip import PureClip
 from star import STAR
-# from samtools import SAM
-# from go_analysis import GO
-# from pars import PARS
+from samtools import SAM
+from go_analysis import GO
+from pars import PARS
 
 
 """
@@ -38,12 +37,11 @@ parser.add_argument("reference_genome", type=str,
 parser.add_argument("genome_annot", type=str,
                     help="Input for the genome annotation file")
 
-# # Creat argument for first output file
-# parser.add_argument("outputFiles1", type=str, help="Name of first output file")
-#
-# # Creat argument for second output file
-# parser.add_argument("outputFiles2", type=str,
-#                     help="Name of second output file")
+
+
+# Creat argument for second output file
+parser.add_argument("--GOfile", type=str,
+                    help="Name of second output file")
 
 # Intermediate Data stroge
 parser.add_argument(
@@ -96,9 +94,10 @@ parser.add_argument(
 # parser.add_argument("-pcchr", '--pureclip-chr',
 #                     help="if specificed, then pureclip can have more narrow focus.")
 
-# SECTION-2.5: PARS
+# SECTION-2.5: PRAS
 # TODO: build parser structure for PARS, specify which what kind of parameters is needed for PARS related input.
-
+parser.add_argument("-t",'--id_file',type=str, help="Input the ID file. This file has to have two columns, the first column is the transcript ID, and the second column is the gene id or gene name. Please check the instruction page for file example.", action='append')
+parser.add_argument("-s",'--pras_region', type=str, help="Input the Genomic region. Comma separated multiple genomic regions are acceptable. For single genomic region, there are five options: '5UTR' is the 5'UTR, 'CDS' is the coding region, '3UTR' is the 3'UTR, 'transcript' is the entire transcript, and 'splice' is for splicing site (SS). If no input provided, PRAS will take the transcript as the default input. As for multiple genomic regions, any combination of '5UTR', 'CDS', and '3UTR' is accepted. 'splice' cannot appear in the multiple genomice region input.")
 
 # SECTION-2.6: GO
 # TODO: build parser structure for GO, specify which what kind of parameters is needed for GO related input.
@@ -162,37 +161,48 @@ st.CallSTAR()
 
 # SECTION-3.3: Calling Samtools
 # TODO: Define your local parameter dict you want to pass into the class.
-# samtool_param = {
-#     'output_bai': start_param + '.bai'
-# }  # MODIFY this
-#
-# sm = SAM(samtool_param)
-# sm.CallSAM()
-#
-# # SECTION-3.4: Calling pureclip
-# # TODO: Define your local parameter dict you want to pass into the class.
-# # call the functions for commandline
-# pureclip_param = {
-#     'reads': star_param['output_bam'],
-#     'align': samtool_param['output_bai'],
-#     'genome': share_param['genome_ref'],
-#     'output_bed': 'pureclip_output.bed',
-#     'parallel_num': args.pureclip_parallel_num,
-#     'specific_chromosome': args.pureclip_chr,
-# }  # MODIFY this
-#
-# pc = PureClip(pureclip_param)
-# pc.CallPureClip()
-#
-#
-# # SECTION-3.5: Calling PARS
-# # TODO: Define your local parameter dict you want to pass into the class.
-#
-# pars_param = {}
-#
-#
-# # SECTION-3.6: Calling GO
-# # TODO: Define your local parameter dict you want to pass into the class.
-# go_param = {}  # MODIFY this
-# go = GO(go_param)
-# go.CallGO()
+
+
+samtool_param = {
+    'output_bai': start_param + '.bai'
+}  # MODIFY this
+
+sm = SAM(samtool_param)
+sm.CallSAM()
+
+# SECTION-3.4: Calling pureclip
+# TODO: Define your local parameter dict you want to pass into the class.
+# call the functions for commandline
+pureclip_param = {
+    'reads': star_param['output_bam'],
+    'align': samtool_param['output_bai'],
+    'genome': share_param['genome_ref'],
+    'output_bed': 'pureclip_output.bed',
+    'parallel_num': args.pureclip_parallel_num,
+    'specific_chromosome': args.pureclip_chr,
+}  # MODIFY this
+
+pc = PureClip(pureclip_param)
+pc.CallPureClip()
+
+
+# SECTION-3.5: Calling PRAS
+# TODO: Define your local parameter dict you want to pass into the class.
+
+pras_param = {
+	'annot_file':star_param['annot_file'],
+	'id_file':args.id_file,
+	'region':args.pras_region,
+	'input_file':pureclip_param['output_bed']
+}
+
+
+# SECTION-3.6: Calling GO
+# TODO: Define your local parameter dict you want to pass into the class.
+go_param = {
+        'upstream_file': pars_param['outpu_file'],
+        'go_output':
+        }  # MODIFY this
+go = GO(go_param)
+go.CallGO()
+
