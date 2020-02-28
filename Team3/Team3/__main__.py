@@ -1,5 +1,6 @@
 import subprocess
 import argparse
+import os
 import signal
 from cutadapt import CutAdapt
 from pureclip import PureClip
@@ -24,27 +25,27 @@ parser = argparse.ArgumentParser(
     description="Command line for cutadapt.")
 
 # Create argument for the first input file
-parser.add_argument("--input_file1", type=str, help="Paired end 1 fastq file")
+parser.add_argument("--input_file1", default="INPUT_FILE1", type=str, help="Paired end 1 fastq file")
 
 # Create argument for second input file
-parser.add_argument("--input_file2", type=str, help="Paired end 2 fastq file")
+parser.add_argument("--input_file2", default="INPUT_FILE2", type=str, help="Paired end 2 fastq file")
 
 # Create argument for genome reference file
-parser.add_argument("--reference_genome", type=str,
+parser.add_argument("--reference_genome", default="HG38.FA", type=str,
                     help="Input for the reference genome")
 
 # Create argument for genome annotation file
-parser.add_argument("genome_annot", type=str,
+parser.add_argument("--genome_annot", type=str, default="GENOME_ANNOT",
                     help="Input for the genome annotation file")
 
 
 # Creat argument for second output file
-parser.add_argument("--GO_result_folder", type=str,
-                    help="GO output folder")
+parser.add_argument("--GO_result_folder", default="GO-result-folder", type=str,
+                    help="GO output folder name")
 
 # Intermediate Data stroge
 parser.add_argument(
-    "-inter", "--intermediate_file", default="intermediate", type=str, help="intermediate file storage, default is same dirctory of output file.")
+    "-inter", "--intermediate_file", default="/tmp/biopro", type=str, help="intermediate file storage, default is same dirctory of output file.")
 
 parser.add_argument("-dependency", "--dependancy_script_folder", default="dependency", help="dependency folder for GO and PRAS script")
 
@@ -56,27 +57,27 @@ parser.add_argument("-dependency", "--dependancy_script_folder", default="depend
 # Round 1
 # Create argument for 3' adapter and 5' adapter
 parser.add_argument(
-    "-a", type=str, help="Trim 3' reads adapter, first round", action='append')
+    "-a", type=str, default="ATCG", help="3' reads adapter forward reads, first round", action='append')
 parser.add_argument(
-    "-g", type=str, help="Trim 5' reads adapter, first round", action='append')
+    "-g", type=str, default="TCGA", help="5' reads adapter forward reads, first round", action='append')
 
 # Create argument for more adapters of 3' and 5'
 parser.add_argument(
-    "-A", type=str, help="Second 3' reads adapter, first round", action='append')
+    "-A", type=str, default="CGAT", help="3' reads adapter reverse reads, first round", action='append')
 parser.add_argument(
-    "-G", type=str, help="Second 5' reads adapter, first round", action='append')
+    "-G", type=str, default="GATC", help="5' reads adapter reverse reads, first round", action='append')
 
 # Round 2
 parser.add_argument(
-    "-a2", type=str, help="Trim 3' reads adapter, second round", action='append')
+    "-a2", type=str, default="atcg", help="3' reads adapter forward reads, second round", action='append')
 parser.add_argument(
-    "-g2", type=str, help="Trim 5' reads adapter, second round", action='append')
+    "-g2", type=str, default="tcga", help="5' reads adapter forward reads, second round", action='append')
 
 # Create argument for more adapters of 3' and 5'
 parser.add_argument(
-    "-A2", type=str, help="Second 3' reads adapter, second round", action='append')
+    "-A2", type=str, default="cgat", help="3' reads adapter reverse reads, second round", action='append')
 parser.add_argument(
-    "-G2", type=str, help="Second 5' reads adapter, second round", action='append')
+    "-G2", type=str, default="gatc", help="5' reads adapter reverse reads, second round", action='append')
 
 # For simplification, I will keep every other parameters the same as process from Yeo's lab.
 
@@ -90,15 +91,20 @@ parser.add_argument(
 
 # SECTION-2.4: PureClip
 # TODO: build parser structure for PureClip, specify which what kind of parameters is needed for PureClip related input.
-# parser.add_argument("-pcn", '--pureclip-parallel-num',
-#                     help="pureclip parallelism number")
-# parser.add_argument("-pcchr", '--pureclip-chr',
-#                     help="if specificed, then pureclip can have more narrow focus.")
+parser.add_argument("-pcn", '--pureclip-parallel-num', default=10, type=int,
+                     help="pureclip parallelism number")
+parser.add_argument("-pcchr", '--pureclip-chr', default=None,
+                     help="if specificed, then pureclip can have more narrow focus.")
 
 # SECTION-2.5: PRAS
 # TODO: build parser structure for PARS, specify which what kind of parameters is needed for PARS related input.
-parser.add_argument("-t",'--id_file',type=str, help="Input the ID file. This file has to have two columns, the first column is the transcript ID, and the second column is the gene id or gene name. Please check the instruction page for file example.", action='append')
-parser.add_argument("-s",'--pras_region', type=str, help="Input the Genomic region. Comma separated multiple genomic regions are acceptable. For single genomic region, there are five options: '5UTR' is the 5'UTR, 'CDS' is the coding region, '3UTR' is the 3'UTR, 'transcript' is the entire transcript, and 'splice' is for splicing site (SS). If no input provided, PRAS will take the transcript as the default input. As for multiple genomic regions, any combination of '5UTR', 'CDS', and '3UTR' is accepted. 'splice' cannot appear in the multiple genomice region input.")
+
+
+
+parser.add_argument("-pscl", "--pras_script_loc", type=str, default="PRAS_1.0.py", help="Location for the dependency for PRAS software.")
+
+parser.add_argument("-t",'--id_file',type=str, default="id_file", help="Input the ID file. This file has to have two columns, the first column is the transcript ID, and the second column is the gene id or gene name. Please check the instruction page for file example.", action='append')
+parser.add_argument("-s",'--pras_region', type=str, default="pras_region", help="Input the Genomic region. Comma separated multiple genomic regions are acceptable. For single genomic region, there are five options: '5UTR' is the 5'UTR, 'CDS' is the coding region, '3UTR' is the 3'UTR, 'transcript' is the entire transcript, and 'splice' is for splicing site (SS). If no input provided, PRAS will take the transcript as the default input. As for multiple genomic regions, any combination of '5UTR', 'CDS', and '3UTR' is accepted. 'splice' cannot appear in the multiple genomice region input.")
 
 # SECTION-2.6: GO
 # TODO: build parser structure for GO, specify which what kind of parameters is needed for GO related input.
@@ -119,14 +125,18 @@ share_param = {
     'dependancy_script_folder': args.dependancy_script_folder
 }
 
+
+# make intermediate folder
+os.makedirs(share_param['intermediate_folder'], exist_ok=True)
+
 ######################################
 ## End OF configuration of Paramters##
 ######################################
 
 
 # SECTION 3: CALL FUNCTIONs
-folder = "mkdir " + share_param['inter_folder']
-subprocess.call(folder, shell=True)
+
+
 # SECTION 3.1: CutAdapt
 # TODO: Define your local parameter dict you want to pass into the class.
 
@@ -142,83 +152,85 @@ cutadapt_param = {
     'adapter_A2': args.A2,
     'adapter_g2': args.g2,
     'adapter_G2': args.G2,
-    'inter_folder': share_param['inter_folder'],
+    'inter_folder': share_param['intermediate_folder'],
 }
 
-# cf.CallCutadapt(args)
-# cf.CallInputlist(args)
-# cf.CallFastuniq(args)
-#cf = CutAdapt(cutadapt_param)
-#cf.CallCutAdapt()
+#print("cutadapt_param: ", cutadapt_param)
+cf = CutAdapt(cutadapt_param)
+cf.CallCutAdapt()
 
 
 # SECTION-3.2: Calling STAR
 # TODO: Define your local parameter dict you want to pass into the class.
 star_param = {
     'genome_ref': share_param['genome_ref'],
-    'inter_folder': share_param['inter_folder'],
+    'inter_folder': share_param['intermediate_folder'],
     'genome_annot': args.genome_annot,
-    'output_bam': 'star_output.bam',
+    'output_bam': os.path.join(share_param['intermediate_folder'], 'star_output.bam')
 }  # MODIFY this
 
-#st = STAR(star_param)
-#st.CallSTAR()
-
+#print("star parameters: ", star_param)
 st = STAR(star_param)
 st.CallSTAR()
-#output Aligned.sortedByCoord.out.bam
+
 
 # SECTION-3.3: Calling Samtools
 # TODO: Define your local parameter dict you want to pass into the class.
 
 
 samtool_param = {
-    'output_bai': start_param['output_bam'] + '.bai'
+    'input_bam': star_param['output_bam'],
+    'output_bai': star_param['output_bam'] + '.bai'
 }  # MODIFY this
 
-#sm = SAM(samtool_param)
-#sm.CallSAM()
+#print("samtools_parameters: \n", samtool_param)
+
+sm = SAM(samtool_param)
+sm.CallSAM()
 
 # SECTION-3.4: Calling pureclip
 # TODO: Define your local parameter dict you want to pass into the class.
 # call the functions for commandline
 pureclip_param = {
-    'reads': star_param['output_bam'],
-    'align': samtool_param['output_bai'],
+    'reads': os.path.join(share_param['intermediate_folder'], star_param['output_bam']),
+    'align': os.path.join(share_param['intermediate_folder'], samtool_param['output_bai']),
     'genome': share_param['genome_ref'],
-    'output_bed': 'pureclip_output.bed',
+    'output_bed': os.path.join(share_param['intermediate_folder'], 'pureclip_output.bed'),
     'parallel_num': args.pureclip_parallel_num,
     'specific_chromosome': args.pureclip_chr,
 }  # MODIFY this
 
-#pc = PureClip(pureclip_param)
-#pc.CallPureClip()
+#print("PureClip: \n", pureclip_param)
+pc = PureClip(pureclip_param)
+pc.CallPureClip()
 
 
 # SECTION-3.5: Calling PRAS
 # TODO: Define your local parameter dict you want to pass into the class.
 
 pras_param = {
-	'annot_file':star_param['annot_file'],
+	'annot_file':star_param['genome_annot'],
 	'id_file':args.id_file,
 	'region':args.pras_region,
     'input_file':pureclip_param['output_bed'],
-    'output_file': 'pras_assign.txt'
+    'output_file': 'pras_assign.txt',
+    'script_loc': os.path.join(share_param['dependancy_script_folder'], args.pras_script_loc)
 }
+#print("pras: \n", pras_param)
 
-#pr = PRAS(pras_param)
-#pr.CallPRAS()
+pr = PRAS(pras_param)
+pr.CallPRAS()
 
 
 # SECTION-3.6: Calling GO
 # TODO: Define your local parameter dict you want to pass into the class.
 go_param = {
-        'pras_file': pars_param['output_file'],
-        'output_folder': 'GO-result-folder',
+        'pras_file': pras_param['output_file'],
+        'output_folder': args.GO_result_folder,
         'script_loc': share_param['dependancy_script_folder'] + "/" + args.go_script_file_name ,# require args input
         'intermediate_dir': share_param['intermediate_folder'], # require shared param
         'top_percent': args.go_top_percent, # float please, require args input
         }  # MODIFY this
-print(go_param)
-#go = GO(go_param)
-#go.CallGO()
+#print("GO paramerters: \n", go_param)
+go = GO(go_param)
+go.CallGO()

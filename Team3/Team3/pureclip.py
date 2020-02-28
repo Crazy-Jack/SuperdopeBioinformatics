@@ -13,17 +13,21 @@ class PureClip:
 
     def CallPureClip(self):
         try:
-            command = "pureclip " + "-i " + self.reads_filename + " -bai " + self.algin_filename + " -g " + self.genome_filename + " -nt " +  self.parallel_num + " -o " + self.output_filename
-            if specific_chromosome:
+            command = "pureclip " + "-i " + self.reads_filename + " -bai " + self.algin_filename + " -g " + self.genome_filename + " -nt " +  str(self.parallel_num) + " -o " + self.output_filename
+            if self.specific_chromosome != None:
                 command += " -iv " + self.specific_chromosome
 
+            command += " &> /dev/null"
             # call the service
+
+            print("---------------")
             print(command)
-            p = subprocess.Popen(
-                command,
-                preexec_fn=lambda: signal.signal(signal.SIGPIPE, signal.SIG_DFL),
-                shell=True,
-            ).wait()
+            print("\n")
+##            p = subprocess.Popen(
+##                command,
+##                preexec_fn=lambda: signal.signal(signal.SIGPIPE, signal.SIG_DFL),
+##                shell=True,
+##            ).wait()
 
         except Exception as e:
             print("PureClip Error: ", e)

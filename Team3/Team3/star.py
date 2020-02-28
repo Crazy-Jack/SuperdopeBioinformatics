@@ -32,17 +32,24 @@ class STAR:
             # call the service
             # print(command_mapping)
 
-            p = subprocess.Popen(
-                command_gene_index,
-                preexec_fn=lambda: signal.signal(signal.SIGPIPE, signal.SIG_DFL),
-                shell=True,
-            ).wait()
+            command_gene_index += " &> /dev/null"
+            command_mapping += " &> /dev/null"
+            print("-------------")
+            print(command_gene_index)
+            print("\n")
+            print(command_mapping)
+            print("\n")
+            #p = subprocess.Popen(
+            #    command_gene_index,
+            #    preexec_fn=lambda: signal.signal(signal.SIGPIPE, signal.SIG_DFL),
+            #    shell=True,
+            #).wait()
 
-            p = subprocess.Popen(
-                command_mapping,
-                preexec_fn=lambda: signal.signal(signal.SIGPIPE, signal.SIG_DFL),
-                shell=True,
-            ).wait()
+            #p = subprocess.Popen(
+            #    command_mapping,
+            #    preexec_fn=lambda: signal.signal(signal.SIGPIPE, signal.SIG_DFL),
+            #    shell=True,
+            #).wait()
 
             # print(command_mapping)
         except Exception as e:

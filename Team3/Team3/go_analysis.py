@@ -35,12 +35,15 @@ class GO:
             command = "Rscript " + self.script_loc + " " + self.genelist_loc + " " + self.output_folder# MODIFY this
             # call the service
 
+            command += " &> /dev/null"
+            print("-------------")
             print(command)
-            p = subprocess.Popen(
-                command,
-                preexec_fn=lambda: signal.signal(signal.SIGPIPE, signal.SIG_DFL),
-                shell=True,
-            ).wait()
+            print("\n")
+            #p = subprocess.Popen(
+            #    command,
+            #    preexec_fn=lambda: signal.signal(signal.SIGPIPE, signal.SIG_DFL),
+            #    shell=True,
+            #).wait()
         except Exception as e:
             print("GO analysis Error: ", e)
 
@@ -49,16 +52,16 @@ class GO:
 
 # test
 
-share_param = {
-    'intermediate_folder': 'intermediate',
-    'dependancy_script_folder': 'dependency_script'
-}
-go_param = {
-        'pras_file': 'binding_PRAS.txt',
-        'output_folder': 'GO-result-folder',
-        'script_loc': share_param['dependancy_script_folder'] + "/" + 'GeneEnrichment.R', # require args input
-        'intermediate_dir': share_param['intermediate_folder'], # require shared param
-        'top_percent': 0.05, # float please, require args input
-        }  # MODIFY this
-go = GO(go_param)
-go.CallGO()
+#share_param = {
+#    'intermediate_folder': 'intermediate',
+#    'dependancy_script_folder': 'dependency_script'
+#}
+#go_param = {
+#        'pras_file': 'binding_PRAS.txt',
+#        'output_folder': 'GO-result-folder',
+#        'script_loc': share_param['dependancy_script_folder'] + "/" + 'GeneEnrichment.R', # require args input
+#        'intermediate_dir': share_param['intermediate_folder'], # require shared param
+#        'top_percent': 0.05, # float please, require args input
+#        }  # MODIFY this
+#go = GO(go_param)
+#go.CallGO()

@@ -9,18 +9,20 @@ class PRAS:
         self.region=parameters['region']
         self.input_file=parameters['input_file']
         self.output_file = parameters['output_file']
-
+        self.script_loc = parameters['script_loc']
+#PRAS_1.0.py -
     def CallPRAS(self):
         # TODO: Please follow the try/except paradigm so that user can know which software to look for when it breaks. And also use subprocess to run the command.
         try:
-            command = "python3 PRAS_1.0.py -g " + self.annot_file+" -t "+self.id_file+" -m score -s"+self.region+" -i "+self.input_file+" -a " + self.output_file + " -w 0 -d 1000" # MODIFY this
+            command = "python " + self.script_loc + " -g " + self.annot_file+" -t "+self.id_file+" -m score -s"+self.region+" -i "+self.input_file+" -a " + self.output_file + " -w 0 -d 1000" # MODIFY this
             # call the service
+            command += " &> /dev/null"
             print(command)
-            p = subprocess.Popen(
-                command,
-                preexec_fn=lambda: signal.signal(signal.SIGPIPE, signal.SIG_DFL),
-                shell=True,
-            ).wait()
+            #p = subprocess.Popen(
+            #    command,
+            #    preexec_fn=lambda: signal.signal(signal.SIGPIPE, signal.SIG_DFL),
+            #    shell=True,
+            #).wait()
         except Exception as e:
             print("PARS analysis Error: ", e)
 
