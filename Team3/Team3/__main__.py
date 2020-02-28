@@ -1,7 +1,6 @@
 import subprocess
 import argparse
 import signal
-#import cutadapt_fastuniq as cf
 from cutadapt import CutAdapt
 from pureclip import PureClip
 from star import STAR
@@ -34,8 +33,11 @@ parser.add_argument("input_file2", type=str, help="Paired end 2 fastq file")
 parser.add_argument("reference_genome", type=str,
                     help="Input for the reference genome")
 
-# Creat argument for first output file
-parser.add_argument("outputFiles1", type=str, help="Name of first output file")
+# Create argument for genome annotation file
+parser.add_argument("genome_annot", type=str,
+                    help="Input for the genome annotation file")
+
+
 
 # Creat argument for second output file
 parser.add_argument("--GOfile", type=str,
@@ -43,24 +45,37 @@ parser.add_argument("--GOfile", type=str,
 
 # Intermediate Data stroge
 parser.add_argument(
-    "-inter", "--intermediate_file", type=str, help="intermediate file storage, default is same dirctory of output file.")
+    "-inter", "--intermediate_folder", type=str, help="intermediate file storage, default is same dirctory of output file.")
 
 
 # SECTION-2: create argparse structure for each subsoftware we use.
 
 # SECTION-2.1 Cutadapt
 
+# Round 1
 # Create argument for 3' adapter and 5' adapter
 parser.add_argument(
-    "-a", type=str, help="Trim 3' reads adapter", action='append')
+    "-a", type=str, help="Trim 3' reads adapter, first round", action='append')
 parser.add_argument(
-    "-g", type=str, help="Trim 5' reads adapter", action='append')
+    "-g", type=str, help="Trim 5' reads adapter, first round", action='append')
 
 # Create argument for more adapters of 3' and 5'
 parser.add_argument(
-    "-A", type=str, help="Second 3' reads adapter", action='append')
+    "-A", type=str, help="Second 3' reads adapter, first round", action='append')
 parser.add_argument(
-    "-G", type=str, help="Second 5' reads adapter", action='append')
+    "-G", type=str, help="Second 5' reads adapter, first round", action='append')
+
+# Round 2
+parser.add_argument(
+    "-a2", type=str, help="Trim 3' reads adapter, second round", action='append')
+parser.add_argument(
+    "-g2", type=str, help="Trim 5' reads adapter, second round", action='append')
+
+# Create argument for more adapters of 3' and 5'
+parser.add_argument(
+    "-A2", type=str, help="Second 3' reads adapter, second round", action='append')
+parser.add_argument(
+    "-G2", type=str, help="Second 5' reads adapter, second round", action='append')
 
 # For simplification, I will keep every other parameters the same as process from Yeo's lab.
 
@@ -74,10 +89,10 @@ parser.add_argument(
 
 # SECTION-2.4: PureClip
 # TODO: build parser structure for PureClip, specify which what kind of parameters is needed for PureClip related input.
-parser.add_argument("-pcn", '--pureclip-parallel-num',
-                    help="pureclip parallelism number")
-parser.add_argument("-pcchr", '--pureclip-chr',
-                    help="if specificed, then pureclip can have more narrow focus.")
+# parser.add_argument("-pcn", '--pureclip-parallel-num',
+#                     help="pureclip parallelism number")
+# parser.add_argument("-pcchr", '--pureclip-chr',
+#                     help="if specificed, then pureclip can have more narrow focus.")
 
 # SECTION-2.5: PRAS
 # TODO: build parser structure for PARS, specify which what kind of parameters is needed for PARS related input.
@@ -95,6 +110,7 @@ args = parser.parse_args()
 # TODO: If you need any shared parameters, please include them here. And for minimal redundancy, use the shared param if possible.
 share_param = {
     'genome_ref': args.reference_genome,
+    'inter_folder': args.intermediate_folder,
 }
 
 ######################################
@@ -103,7 +119,8 @@ share_param = {
 
 
 # SECTION 3: CALL FUNCTIONs
-
+folder = "mkdir " + share_param['inter_folder']
+subprocess.call(folder, shell=True)
 # SECTION 3.1: CutAdapt
 # TODO: Define your local parameter dict you want to pass into the class.
 
@@ -111,10 +128,15 @@ share_param = {
 cutadapt_param = {
     'input_file1': args.input_file1,
     'input_file2': args.input_file2,
-    'adpater_a': args.a,
-    'adapter_A': args.A,
-    'adapter_g': args.g,
-    'adapter_G': args.G,
+    'adapter_a1': args.a,
+    'adapter_A1': args.A,
+    'adapter_g1': args.g,
+    'adapter_G1': args.G,
+    'adapter_a2': args.a2,
+    'adapter_A2': args.A2,
+    'adapter_g2': args.g2,
+    'adapter_G2': args.G2,
+    'inter_folder': share_param['inter_folder'],
 }
 
 # cf.CallCutadapt(args)
@@ -122,20 +144,25 @@ cutadapt_param = {
 # cf.CallFastuniq(args)
 cf = CutAdapt(cutadapt_param)
 cf.CallCutAdapt()
-
+# trimmed1.fastq trimmed2.fastq <- two output from CutAdapt
 
 # SECTION-3.2: Calling STAR
 # TODO: Define your local parameter dict you want to pass into the class.
 star_param = {
+    'genome_ref': share_param['genome_ref'],
+    'inter_folder': share_param['inter_folder'],
+    'genome_annot': args.genome_annot,
     'output_bam': 'star_output.bam',
 }  # MODIFY this
 
 st = STAR(star_param)
 st.CallSTAR()
-
+#output Aligned.sortedByCoord.out.bam
 
 # SECTION-3.3: Calling Samtools
 # TODO: Define your local parameter dict you want to pass into the class.
+
+
 samtool_param = {
     'output_bai': start_param + '.bai'
 }  # MODIFY this
@@ -178,3 +205,4 @@ go_param = {
         }  # MODIFY this
 go = GO(go_param)
 go.CallGO()
+
