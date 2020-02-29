@@ -5,14 +5,9 @@ with open("README.md", "r") as fh:
     long_description = fh.read()
 
 
-main_ns = {}
-ver_path = convert_path('version.py')
-with open(ver_path) as ver_file:
-    exec(ver_file.read(), main_ns)
-
 setuptools.setup(
     name="BioPro",
-    version=main_ns['__version__'],
+    version="0.1.4",
     author="Tianqin Li, Zeyuan Zuo, Jui-Chia Chung, Serena Abraham, Snigdha Agarwal",
     author_email="jacklitianqin@gmail.com",
     description="BioPro is a bioinformatics pipeline that predicts the functional targets of RNA-binding protein and the biological processes to which these functional targets contribute. ",
