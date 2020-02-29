@@ -13,17 +13,16 @@ with open(ver_path) as ver_file:
 setuptools.setup(
     name="BioPro",
     version=main_ns['__version__'],
-    author="",
-    author_email="",
-    description=" python package ",
+    author="Tianqin Li, Zeyuan Zuo, Jui-Chia Chung, Serena Abraham, Snigdha Agarwal",
+    author_email="jacklitianqin@gmail.com",
+    description="BioPro is a bioinformatics pipeline that predicts the functional targets of RNA-binding protein and the biological processes to which these functional targets contribute. ",
     long_description=long_description,
     long_description_content_type="text/markdown",
     url="https://github.com/Crazy-Jack/SuperdopeBioinformatics",
     packages=['Team3'],
     entry_points = {
         'console_scripts':[
-            #'circDraw = circDraw.__main__:main',
-            'Team3 = Team3.__main__:main',
+            'BioPro = Team3.__main__:main',
             ]
         },
     classifiers=[

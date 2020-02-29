@@ -3,14 +3,11 @@ import signal
 
 class STAR:
     def __init__(self, parameters):
-        # TODO: fill in as self.xxx = parameters['xxx']
         self.genome_ref = parameters['genome_ref']
         self.inter_folder = parameters['inter_folder']
         self.genome_annot = parameters['genome_annot']
-        pass
 
     def CallSTAR(self):
-        # TODO: Please follow the try/except paradigm so that user can know which software to look for when it breaks. And also use subprocess to run the command.
         try:
             command_gene_index = "STAR --runThreadN 10 --runMode genomeGenerate --genomeDir "
             command_gene_index += self.inter_folder + "/"
@@ -34,23 +31,18 @@ class STAR:
 
             command_gene_index += " &> /dev/null"
             command_mapping += " &> /dev/null"
-            print("-------------")
-            print(command_gene_index)
-            print("\n")
+            p = subprocess.Popen(
+                command_gene_index,
+                preexec_fn=lambda: signal.signal(signal.SIGPIPE, signal.SIG_DFL),
+                shell=True,
+            ).wait()
+
+            p = subprocess.Popen(
+                command_mapping,
+                preexec_fn=lambda: signal.signal(signal.SIGPIPE, signal.SIG_DFL),
+                shell=True,
+            ).wait()
+
             print(command_mapping)
-            print("\n")
-            #p = subprocess.Popen(
-            #    command_gene_index,
-            #    preexec_fn=lambda: signal.signal(signal.SIGPIPE, signal.SIG_DFL),
-            #    shell=True,
-            #).wait()
-
-            #p = subprocess.Popen(
-            #    command_mapping,
-            #    preexec_fn=lambda: signal.signal(signal.SIGPIPE, signal.SIG_DFL),
-            #    shell=True,
-            #).wait()
-
-            # print(command_mapping)
         except Exception as e:
             print("STAR analysis Error: ", e)

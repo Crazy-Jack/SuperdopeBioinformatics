@@ -4,7 +4,6 @@ import signal
 
 class CutAdapt:
     def __init__(self, parameters):
-        # TODO: fill in as self.xxx = parameters['xxx']
         self.input1 = parameters['input_file1']
         self.input2 = parameters['input_file2']
         self.adapter_a1 = parameters['adapter_a1']
@@ -19,7 +18,6 @@ class CutAdapt:
         pass
 
     def CallCutAdapt(self):
-        # TODO: Please follow the try/except paradigm so that user can know which software to look for when it breaks. And also use subprocess to run the command.
         try:
             # fixed parameters
             combine_args_catadapt = ""
@@ -49,28 +47,26 @@ class CutAdapt:
                     "/trimmed1.fastq " + "-p " + self.inter_folder + "/trimmed2.fastq "
                 combine_args_catadapt += self.input1 + " " + self.input2 + " "
 
-                print(combine_args_catadapt)
-                print("\n")
-                #p = subprocess.Popen(
-                #    combine_args_catadapt,
-                #    preexec_fn=lambda: signal.signal(
-                #        signal.SIGPIPE, signal.SIG_DFL),
-                #    shell=True,
-                #).wait()
+                p = subprocess.Popen(
+                    combine_args_catadapt,
+                    preexec_fn=lambda: signal.signal(
+                        signal.SIGPIPE, signal.SIG_DFL),
+                    shell=True,
+                ).wait()
 
-                #p = subprocess.Popen(
-                #    gzip1,
-                #    preexec_fn=lambda: signal.signal(
-                #        signal.SIGPIPE, signal.SIG_DFL),
-                #    shell=True,
-                #).wait()
+                p = subprocess.Popen(
+                    gzip1,
+                    preexec_fn=lambda: signal.signal(
+                        signal.SIGPIPE, signal.SIG_DFL),
+                    shell=True,
+                ).wait()
 
-                #p = subprocess.Popen(
-                #    gzip2,
-                #    preexec_fn=lambda: signal.signal(
-                #        signal.SIGPIPE, signal.SIG_DFL),
-                #    shell=True,
-                #).wait()
+                p = subprocess.Popen(
+                    gzip2,
+                    preexec_fn=lambda: signal.signal(
+                        signal.SIGPIPE, signal.SIG_DFL),
+                    shell=True,
+                ).wait()
             else:
                 combine_args_catadapt += "-o " + self.inter_folder + \
                     "/trimmed1_1.fastq " + "-p " + self.inter_folder + "/trimmed2_1.fastq "
@@ -97,35 +93,33 @@ class CutAdapt:
                 combine_args_catadapt2 += self.inter_folder + \
                     "/trimmed1_1.fastq " + self.inter_folder + "/trimmed2_1.fastq "
 
-                print(combine_args_catadapt2)
-                print("\n")
-                #p = subprocess.Popen(
-                #    combine_args_catadapt,
-                #    preexec_fn=lambda: signal.signal(
-                #        signal.SIGPIPE, signal.SIG_DFL),
-                #    shell=True,
-                #).wait()
+                p = subprocess.Popen(
+                    combine_args_catadapt,
+                    preexec_fn=lambda: signal.signal(
+                        signal.SIGPIPE, signal.SIG_DFL),
+                    shell=True,
+                ).wait()
 
-                #p = subprocess.Popen(
-                #    combine_args_catadapt2,
-                #    preexec_fn=lambda: signal.signal(
-                #        signal.SIGPIPE, signal.SIG_DFL),
-                #    shell=True,
-                #).wait()
+                p = subprocess.Popen(
+                    combine_args_catadapt2,
+                    preexec_fn=lambda: signal.signal(
+                        signal.SIGPIPE, signal.SIG_DFL),
+                    shell=True,
+                ).wait()
 
-                #p = subprocess.Popen(
-                #    gzip1,
-                #    preexec_fn=lambda: signal.signal(
-                #        signal.SIGPIPE, signal.SIG_DFL),
-                #    shell=True,
-                #).wait()
+                p = subprocess.Popen(
+                    gzip1,
+                    preexec_fn=lambda: signal.signal(
+                        signal.SIGPIPE, signal.SIG_DFL),
+                    shell=True,
+                ).wait()
 
-                #p = subprocess.Popen(
-                #    gzip2,
-                #    preexec_fn=lambda: signal.signal(
-                #        signal.SIGPIPE, signal.SIG_DFL),
-                #    shell=True,
-                #).wait()
+                p = subprocess.Popen(
+                    gzip2,
+                    preexec_fn=lambda: signal.signal(
+                        signal.SIGPIPE, signal.SIG_DFL),
+                    shell=True,
+                ).wait()
 
 
         except Exception as e:

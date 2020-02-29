@@ -17,17 +17,14 @@ class PureClip:
             if self.specific_chromosome != None:
                 command += " -iv " + self.specific_chromosome
 
-            command += " &> /dev/null"
+            #command += " &> /dev/null"
             # call the service
 
-            print("---------------")
-            print(command)
-            print("\n")
-##            p = subprocess.Popen(
-##                command,
-##                preexec_fn=lambda: signal.signal(signal.SIGPIPE, signal.SIG_DFL),
-##                shell=True,
-##            ).wait()
+            p = subprocess.Popen(
+                command,
+                preexec_fn=lambda: signal.signal(signal.SIGPIPE, signal.SIG_DFL),
+                shell=True,
+            ).wait()
 
         except Exception as e:
             print("PureClip Error: ", e)
