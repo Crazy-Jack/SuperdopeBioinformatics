@@ -21,4 +21,6 @@ bash install.sh
 
 Or you can directly install our software from pip:
 
-`pip install Team3`
+`pip install BioPro`
+
+Our package can be found at: https://pypi.org/project/BioPro/
