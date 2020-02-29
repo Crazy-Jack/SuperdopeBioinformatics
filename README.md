@@ -24,3 +24,15 @@ Or you can directly install our software from pip:
 `pip install BioPro`
 
 Our package can be found at: https://pypi.org/project/BioPro/
+
+
+## Attribution
+
+This project is created as a course project for Bioinformatics. All memebers of our team contributed equally to the final product. Great thanks to Tianqin Li, Zeyuan Zuo, Jui-Chia Chung, Snigdha Agarwal and SerenaAbraham. 
+
+## Maintainance
+
+Tianqin Li (jacklitianqin@gmail.com)
+Carnegie Mellon University
+Pittsburgh, PA, 15213, US.
+
