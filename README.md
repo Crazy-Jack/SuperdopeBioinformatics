@@ -33,6 +33,8 @@ This project is created as a course project for Bioinformatics. All memebers of 
 ## Maintainance
 
 Tianqin Li (jacklitianqin@gmail.com)
+
 Carnegie Mellon University
+
 Pittsburgh, PA, 15213, US.
 
