@@ -161,8 +161,8 @@ def main():
     }
 
     #print("cutadapt_param: ", cutadapt_param)
-    #cf = CutAdapt(cutadapt_param)
-    #cf.CallCutAdapt()
+    cf = CutAdapt(cutadapt_param)
+    cf.CallCutAdapt()
 
 
     # SECTION-3.2: Calling STAR
@@ -175,8 +175,8 @@ def main():
     }  # MODIFY this
 
     #print("star parameters: ", star_param)
-    #st = STAR(star_param)
-    #st.CallSTAR()
+    st = STAR(star_param)
+    st.CallSTAR()
 
 
     # SECTION-3.3: Calling Samtools
@@ -190,8 +190,8 @@ def main():
 
     #print("samtools_parameters: \n", samtool_param)
 
-    #sm = SAM(samtool_param)
-    #sm.CallSAM()
+    sm = SAM(samtool_param)
+    sm.CallSAM()
 
     # SECTION-3.4: Calling pureclip
     # TODO: Define your local parameter dict you want to pass into the class.
@@ -206,8 +206,8 @@ def main():
     }  # MODIFY this
 
     #print("PureClip: \n", pureclip_param)
-    #pc = PureClip(pureclip_param)
-    #pc.CallPureClip()
+    pc = PureClip(pureclip_param)
+    pc.CallPureClip()
 
 
     # SECTION-3.5: Calling PRAS
@@ -237,8 +237,8 @@ def main():
             'top_percent': args.go_top_percent, # float please, require args input
             }  # MODIFY this
     #print("GO paramerters: \n", go_param)
-    #go = GO(go_param)
-    #go.CallGO()
+    go = GO(go_param)
+    go.CallGO()
 
 
 if __name__ == "__main__":

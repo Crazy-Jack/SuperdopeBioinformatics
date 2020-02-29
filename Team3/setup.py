@@ -7,7 +7,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="BioPro",
-    version="0.1.4",
+    version="0.1.5",
     author="Tianqin Li, Zeyuan Zuo, Jui-Chia Chung, Serena Abraham, Snigdha Agarwal",
     author_email="jacklitianqin@gmail.com",
     description="BioPro is a bioinformatics pipeline that predicts the functional targets of RNA-binding protein and the biological processes to which these functional targets contribute. ",
